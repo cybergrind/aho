@@ -1,14 +1,6 @@
-aho
-===
+# aho
 
-```
-mkdir -p ~/.local/share/common-lisp/source
-ln -s `pwd` ~/.local/share/common-lisp/source/aho
-```
+aho examples in clojure
 
-```lisp
-(require 'asdf)
-(require 'aho)
+## Usage
 
-(aho:tt)
-```
