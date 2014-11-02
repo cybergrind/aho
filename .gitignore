@@ -3,3 +3,8 @@
 *.lisp-temp
 \#*
 .emacs.desktop*
+/.lein-failures
+/.lein-repl-history
+/.nrepl-port
+/target/
+*~
