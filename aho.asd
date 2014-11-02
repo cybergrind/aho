@@ -17,6 +17,7 @@
             :components
             (
              (:file "tools")
+             (:file "ex1")
              )
             ))
   )
