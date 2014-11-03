@@ -5,7 +5,7 @@
 (defn vertice
   ([name] {:name name, :edges #{} :color nil})
   ([name edges] {:name name, :edges edges, :color nil}))
-   
+
 (defn graph
   ([] {:vs #{}})
   ([vertices] {:vs vertices}))
@@ -26,17 +26,30 @@
      (= f nil) nil
      (= (get f :name) name) f
      :else (find-in-vertices r name))))
-  
+
 (defn find-vertice [g name]
   (find-in-vertices (get g :vs) name))
 
-(defn replace-vertice [g v1 v2]
+(defn replace-vertice [g v2]
   (let [vs (get g :vs)]
-    (println "try to remove" v1)
-    (clojure.pprint/pprint
-     (difference vs v1))
     (graph
-     (conj (difference vs v1) v2))))
+     (let [name (get v2 :name)]
+       (conj
+         (filter #(not= (get % :name) name) vs)
+         v2)))))
+
+(defn vertice-add-edge [v e]
+  (assoc v :edges (conj (get v :edges) e)))
+
+(defn add-edge [g games]
+  (let [[e1 e2] games
+        v1 (find-vertice g e1)
+        v2 (find-vertice g e2)
+        v1n (vertice-add-edge v1 e2)
+        v2n (vertice-add-edge v2 e1)]
+    (reduce replace-vertice g [v1n v2n])))
+
+
 
 (def commands
   [:vultures :lions :eagles :beavers
@@ -53,6 +66,9 @@
 (def init-graph
   (reduce add-vertice (graph) commands))
 
+(def with-edges
+  (reduce add-edge init-graph games))
+
+(clojure.pprint/pprint with-edges)
 (clojure.pprint/pprint
- (replace-vertice init-graph (find-vertice init-graph :tigers)
-                  (vertice :tigers #{:lions})))
+ (replace-vertice init-graph (vertice :tigers #{:lions})))
