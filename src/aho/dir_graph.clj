@@ -45,16 +45,21 @@
 (defn get-subvertices [vertice graph]
   (map #(find-by-label %1 graph) (get vertice :e)))
 
-(defn topsort
-  [graph vertice]
-  (cond
-   (and (not (nil? vertice)) (not (check-mark vertice :visited)))
-   (let [new_graph (mark graph (get-label vertice) :visited)]
-     (reduce topsort new_graph (get-subvertices vertice new_graph))
-     (println vertice))
-   :else nil))
+(defn get-sublabels [vertice graph]
+  (get vertice :e))
 
-(clojure.pprint/pprint (topsort test_graph (first test_graph)))
+(defn topsort
+  [graph label]
+  (let [vertice (find-by-label label graph)]
+    (cond
+     (not (check-mark vertice :visited))
+     (let [new_graph (mark graph (get-label vertice) :visited)
+           ret_graph (reduce topsort new_graph (get-sublabels vertice new_graph))]
+       (println vertice)
+       ret_graph)
+     :else graph)))
+
+(clojure.pprint/pprint (topsort test_graph :a))
   
 ; return matrix of graph filled with 0
 (defn null_matrix [graph]
